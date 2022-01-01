@@ -1,5 +1,8 @@
 import {React,useState} from 'react'
-
+const axios = require('axios');
+const api=axios.create({
+  baseURL:'http://localhost:5000/'
+});
 export const SignUp = () => {
   const [values,setValues] =useState({
     username:"",
@@ -14,8 +17,27 @@ export const SignUp = () => {
       [name]: value,
     });
   };
-  const Signupme=()=>{
-    //Post Request
+  const Signupme= async(e)=>{
+    // e.preventDefault();
+    // alert("Inside");
+    try {
+      let res=await api.post('/signup',
+      {
+      method:'POST',
+      data:JSON.stringify({
+        username:values.username,
+        phone:values.phone,
+        aadhar:values.aadhar,
+        password:values.password
+      }),
+      headers:{
+        'content-type':'application/json'
+      }
+      });
+      alert(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
     return (
       <div class="w-1/2 mt-20 mx-auto">
@@ -45,7 +67,7 @@ export const SignUp = () => {
           <input value={values.password} onChange={handleInputChange} name='password' class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************"/>
          </div>
         <div class="flex items-center flex flex-row gap-2">
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={()=>{Signupme()}}>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={Signupme}>
             Sign Up
           </button>
           <p className=' justify-end ml-20 mt-3 text-gray-500 text-xs'>Don't Have an account? Make it One</p>
